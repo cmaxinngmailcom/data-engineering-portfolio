@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Chap4_WorkingWithLists"
+		},
+		{
+			"path": "../Chap5_IfStatements"
+		},
+		{
+			"path": "../Chap6_Dictionaries"
+		},
+		{
+			"path": "../Chap7_User_Input_While_Loop"
+		},
+		{
+			"path": "../Chap8_Functions"
+		},
+		{
+			"path": "../Chap9_Classes"
+		}
+	],
+	"settings": {}
+}

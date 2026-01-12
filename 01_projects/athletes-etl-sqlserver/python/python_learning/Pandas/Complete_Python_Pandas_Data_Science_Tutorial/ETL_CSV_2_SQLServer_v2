@@ -1,0 +1,266 @@
+import time
+import uuid
+import json
+import logging
+import hashlib
+import pandas as pd
+from sqlalchemy import text
+
+# ---------- Logging ----------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+log = logging.getLogger("etl")
+
+PIPELINE_NAME = "CSV_to_SQLServer_Athletes"
+SOURCE_NAME = "bios.csv"
+TARGET_TABLE = "dbo.Athletes"
+
+# ---------- Helpers ----------
+def get_count(engine, full_table_name: str) -> int:
+    q = f"SELECT COUNT(*) AS row_count FROM {full_table_name}"
+    df = pd.read_sql(q, engine)
+    return int(df.loc[0, "row_count"])
+
+def compute_row_hash(df: pd.DataFrame, cols: list[str]) -> pd.Series:
+    """
+    Returns SHA256 hash bytes for each row based on chosen columns.
+    Hash is stable and avoids collisions better than simple concatenation.
+    """
+    def row_to_bytes(row):
+        parts = []
+        for c in cols:
+            v = row.get(c)
+            if pd.isna(v):
+                v = ""
+            parts.append(str(v))
+        joined = "|".join(parts).encode("utf-8")
+        return hashlib.sha256(joined).digest()
+
+    return df.apply(row_to_bytes, axis=1)
+
+def write_audit_start(engine, run_id, started_at):
+    with engine.begin() as conn:
+        conn.execute(text("""
+            INSERT INTO dbo.ETL_Audit_Run
+            (run_id, pipeline_name, started_at, source_name, target_table, status)
+            VALUES (:run_id, :pipeline_name, :started_at, :source_name, :target_table, :status)
+        """), {
+            "run_id": str(run_id),
+            "pipeline_name": PIPELINE_NAME,
+            "started_at": started_at,
+            "source_name": SOURCE_NAME,
+            "target_table": TARGET_TABLE,
+            "status": "RUNNING"
+        })
+
+def write_audit_finish(engine, run_id, finished_at, payload: dict):
+    payload = payload.copy()
+    payload["run_id"] = str(run_id)
+    payload["finished_at"] = finished_at
+    with engine.begin() as conn:
+        conn.execute(text("""
+            UPDATE dbo.ETL_Audit_Run
+            SET finished_at       = :finished_at,
+                source_row_count  = :source_row_count,
+                target_before     = :target_before,
+                inserted_rows     = :inserted_rows,
+                target_after      = :target_after,
+                row_diff          = :row_diff,
+                source_dupes      = :source_dupes,
+                target_dupes      = :target_dupes,
+                rejected_rows     = :rejected_rows,
+                status            = :status,
+                message           = :message,
+                duration_seconds  = :duration_seconds
+            WHERE run_id = :run_id
+        """), payload)
+
+def insert_rejects(engine, run_id, rejects_df: pd.DataFrame):
+    if rejects_df.empty:
+        return 0
+    rows = []
+    for _, r in rejects_df.iterrows():
+        rows.append({
+            "run_id": str(run_id),
+            "athlete_id": None if pd.isna(r.get("athlete_id")) else int(r.get("athlete_id")),
+            "reason": r["reason"],
+            "raw_row_json": json.dumps(r["raw_row"], ensure_ascii=False)
+        })
+    with engine.begin() as conn:
+        conn.execute(text("""
+            INSERT INTO dbo.Athletes_Rejects (run_id, athlete_id, reason, raw_row_json)
+            VALUES (:run_id, :athlete_id, :reason, :raw_row_json)
+        """), rows)
+    return len(rows)
+
+# ---------- Data Quality Gate (Reject bad rows) ----------
+def validate_rows(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Returns (good_rows_df, rejects_df)
+    rejects_df columns: athlete_id, reason, raw_row
+    """
+    rejects = []
+
+    # 1) Required PK present
+    bad_pk = df["athlete_id"].isna()
+    if bad_pk.any():
+        for _, row in df[bad_pk].iterrows():
+            rejects.append({"athlete_id": row.get("athlete_id"), "reason": "Missing athlete_id", "raw_row": row.to_dict()})
+
+    # 2) String length validation aligned with your schema
+    limits = {"name": 200, "born_city": 100, "born_region": 100, "born_country": 5, "NOC": 50}
+    for col, lim in limits.items():
+        s = df[col].astype("string").fillna("")
+        too_long = s.str.len() > lim
+        if too_long.any():
+            for _, row in df[too_long].iterrows():
+                rejects.append({
+                    "athlete_id": row.get("athlete_id"),
+                    "reason": f"Value too long in {col} (>{lim})",
+                    "raw_row": row.to_dict()
+                })
+
+    # Build rejects df
+    rejects_df = pd.DataFrame(rejects)
+
+    # Good rows = drop rows that appear in rejects (by athlete_id + full row match not necessary; keep it simple)
+    if not rejects_df.empty:
+        # mark bad rows by index by re-evaluating same conditions
+        bad_mask = pd.Series(False, index=df.index)
+        bad_mask |= df["athlete_id"].isna()
+
+        for col, lim in limits.items():
+            s = df[col].astype("string").fillna("")
+            bad_mask |= (s.str.len() > lim)
+
+        good_df = df[~bad_mask].copy()
+    else:
+        good_df = df.copy()
+
+    return good_df, rejects_df
+
+# ---------- MAIN ETL ----------
+run_id = uuid.uuid4()
+started_at = pd.Timestamp.utcnow().to_pydatetime()
+write_audit_start(engine, run_id, started_at)
+log.info(f"Run started: {run_id}")
+
+try:
+    source_row_count = len(athletes)
+    target_before = get_count(engine, TARGET_TABLE)
+
+    # Validate + Reject bad rows
+    good_df, rejects_df = validate_rows(athletes)
+    rejected_rows = insert_rejects(engine, run_id, rejects_df)
+
+    # Source duplicate detection using hash (based on business key columns)
+    # Choose columns that define "same record"
+    hash_cols = ["athlete_id", "name", "born_date", "born_city", "born_region", "born_country", "NOC", "height_cm", "weight_kg", "died_date"]
+    good_df = good_df.copy()
+    good_df["row_hash"] = compute_row_hash(good_df, hash_cols)
+
+    source_dupes = int(good_df.duplicated(subset=["row_hash"]).sum())
+
+    # Optional: drop source dupes before inserting (common in ETL)
+    good_df = good_df.drop_duplicates(subset=["row_hash"]).copy()
+
+    rows_to_insert = len(good_df)
+
+    log.info(f"Source rows: {source_row_count}")
+    log.info(f"Target before: {target_before}")
+    log.info(f"Rejected rows: {rejected_rows}")
+    log.info(f"Source dupes (by hash): {source_dupes}")
+    log.info(f"Rows to insert (after rejects+dedupe): {rows_to_insert}")
+
+    # ⏱️ Insert with timer
+    t0 = time.time()
+
+    # For speed: chunk inserts. (Also helps with memory + DB transaction sizes.)
+    good_df.to_sql(
+        name="Athletes",
+        con=engine,
+        schema="dbo",
+        if_exists="append",
+        index=False,
+        chunksize=5000,     # tune: 5k–50k depending on your machine
+        method="multi"      # batches INSERT statements
+    )
+
+    t1 = time.time()
+
+    target_after = get_count(engine, TARGET_TABLE)
+    inserted_rows = target_after - target_before
+
+    # Source vs Target diff (expected vs actual)
+    expected_after = target_before + rows_to_insert
+    row_diff = target_after - expected_after  # 0 is perfect
+
+    # Target duplicate detection (hash) — checks if target has duplicate hashes
+    # If you added dbo.Athletes.row_hash, this is straightforward:
+    with engine.begin() as conn:
+        # Note: If row_hash is NULL for old data, you can backfill later.
+        result = conn.execute(text("""
+            SELECT SUM(CASE WHEN c > 1 THEN 1 ELSE 0 END) AS dup_groups
+            FROM (
+                SELECT row_hash, COUNT(*) AS c
+                FROM dbo.Athletes
+                WHERE row_hash IS NOT NULL
+                GROUP BY row_hash
+            ) x
+        """)).scalar()
+
+    target_dupes = int(result or 0)
+
+    duration = round(t1 - t0, 2)
+    status = "SUCCESS"
+    message = "OK"
+
+    # Audit finish
+    write_audit_finish(engine, run_id, pd.Timestamp.utcnow().to_pydatetime(), {
+        "source_row_count": source_row_count,
+        "target_before": target_before,
+        "inserted_rows": inserted_rows,
+        "target_after": target_after,
+        "row_diff": row_diff,
+        "source_dupes": source_dupes,
+        "target_dupes": target_dupes,
+        "rejected_rows": rejected_rows,
+        "status": status,
+        "message": message,
+        "duration_seconds": duration
+    })
+
+    log.info(f"✅ Done. Inserted: {inserted_rows} rows in {duration}s")
+    log.info(f"📊 Target after: {target_after} | Row diff: {row_diff}")
+    log.info(f"🧬 Target dup groups (hash): {target_dupes}")
+
+except Exception as e:
+    log.exception("❌ ETL failed")
+    write_audit_finish(engine, run_id, pd.Timestamp.utcnow().to_pydatetime(), {
+        "source_row_count": len(athletes),
+        "target_before": None,
+        "inserted_rows": None,
+        "target_after": None,
+        "row_diff": None,
+        "source_dupes": None,
+        "target_dupes": None,
+        "rejected_rows": None,
+        "status": "FAILED",
+        "message": str(e)[:2000],
+        "duration_seconds": None
+    })
+    raise
+
+
+# *****************************************************************************
+# *********
+# NEXT STEP
+# *********
+#
+# If you want, I can show you the CHUNKED STREAMING VERSION next 
+# (reads CSV in chunks, validates + rejects, inserts chunk-by-chunk, 
+# and updates the audit table continuously). 
+# That’s the most realistic “million-row” pattern.
+# *****************************************************************************
