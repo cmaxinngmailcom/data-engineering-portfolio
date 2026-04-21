@@ -30,3 +30,4 @@ COPY . .
 ENV PYTHONPATH=/app/src
 
 CMD ["python", "-m", "athletes_etl.main"]
+
