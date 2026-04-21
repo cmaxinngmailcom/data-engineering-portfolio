@@ -1,0 +1,85 @@
+2026-04-08 18:13:11,906 | INFO | Data cleaning complete
+2026-04-08 18:13:12,751 | INFO | Rejected rows written: 0
+2026-04-08 18:13:12,818 | INFO | Numeric-range rejects written: 0
+2026-04-08 18:13:12,923 | INFO | Date-sanity rejects written: 0
+2026-04-08 18:13:16,377 | INFO | Source duplicates removed (hash): 411
+2026-04-08 18:13:27,581 | INFO | Status: SUCCESS
+2026-04-08 18:20:53,237 | INFO | Data cleaning complete
+2026-04-08 18:20:53,671 | INFO | Rejected rows written: 0
+2026-04-08 18:20:53,714 | INFO | Numeric-range rejects written: 0
+2026-04-08 18:20:53,802 | INFO | Date-sanity rejects written: 0
+2026-04-08 18:20:58,165 | INFO | Source duplicates removed (hash): 411
+2026-04-08 18:21:08,285 | INFO | 
+ ETL RUN SUMMARY
+2026-04-08 18:21:08,286 | INFO | ========================================
+2026-04-08 18:21:08,286 | INFO | Run ID: 9628a2dc-e58d-4e4c-82dd-abfb3d2fe7dc
+2026-04-08 18:21:08,287 | INFO | Source rows: 145500
+2026-04-08 18:21:08,287 | INFO | Rejected rows (athlete_id rules): 0
+2026-04-08 18:21:08,288 | INFO | Source dupes removed (hash): 411
+2026-04-08 18:21:08,289 | INFO | Target before: 0
+2026-04-08 18:21:08,289 | INFO | Inserted rows: 145054
+2026-04-08 18:21:08,290 | INFO | Target after: 145054
+2026-04-08 18:21:08,291 | INFO | Source vs Inserted diff: 446
+2026-04-08 18:21:08,291 | INFO | Duration: 9.93 sec
+2026-04-08 18:21:08,292 | INFO | Status: SUCCESS
+2026-04-16 10:02:27,325 | INFO | Extract CSV took 0.43 sec
+2026-04-16 10:02:28,115 | INFO | Clean athletes data took 0.77 sec
+2026-04-16 10:02:28,116 | INFO | Data cleaning complete
+2026-04-16 10:02:28,417 | INFO | String length checks took 0.30 sec
+2026-04-16 10:02:28,596 | INFO | Rejected rows written: 0
+2026-04-16 10:02:28,641 | INFO | Numeric reject checks took 0.04 sec
+2026-04-16 10:02:28,642 | INFO | Numeric-range rejects written: 0
+2026-04-16 10:02:28,741 | INFO | Date sanity checks took 0.10 sec
+2026-04-16 10:02:28,741 | INFO | Date-sanity rejects written: 0
+2026-04-16 10:02:31,946 | INFO | Hash dedupe took 3.20 sec
+2026-04-16 10:02:31,947 | INFO | Source duplicates removed (hash): 411
+2026-04-16 10:02:43,033 | INFO | Load to SQL Server took 11.07 sec
+2026-04-16 10:02:43,068 | INFO | Total ETL run took 16.19 sec
+2026-04-16 10:02:43,069 | INFO | 
+ ETL RUN SUMMARY
+2026-04-16 10:02:43,070 | INFO | ========================================
+2026-04-16 10:02:43,070 | INFO | Run ID: 521748d8-d9fb-4e45-bd3a-38702b09b0ee
+2026-04-16 10:02:43,071 | INFO | Source rows: 145500
+2026-04-16 10:02:43,072 | INFO | Rejected rows (athlete_id rules): 0
+2026-04-16 10:02:43,072 | INFO | Source dupes removed (hash): 411
+2026-04-16 10:02:43,072 | INFO | Target before: 0
+2026-04-16 10:02:43,073 | INFO | Inserted rows: 145054
+2026-04-16 10:02:43,073 | INFO | Target after: 145054
+2026-04-16 10:02:43,073 | INFO | Source vs Inserted diff: 446
+2026-04-16 10:17:25,031 | INFO | Extract CSV took 0.34 sec
+2026-04-16 10:17:25,575 | INFO | Clean athletes data took 0.54 sec
+2026-04-16 10:17:25,576 | INFO | Data cleaning complete
+2026-04-16 10:17:25,814 | INFO | String length checks took 0.24 sec
+2026-04-16 10:17:25,985 | INFO | Rejected rows written: 0
+2026-04-16 10:17:26,029 | INFO | Numeric reject checks took 0.04 sec
+2026-04-16 10:17:26,029 | INFO | Numeric-range rejects written: 0
+2026-04-16 10:17:26,129 | INFO | Date sanity checks took 0.10 sec
+2026-04-16 10:17:26,129 | INFO | Date-sanity rejects written: 0
+2026-04-16 10:17:29,241 | INFO | Hash dedupe took 3.11 sec
+2026-04-16 10:17:29,241 | INFO | Source duplicates removed (hash): 411
+2026-04-16 10:17:35,424 | INFO | Load to SQL Server took 6.15 sec
+2026-04-16 10:17:35,500 | INFO | Total ETL run took 10.81 sec
+2026-04-16 10:17:35,500 | INFO | 
+ ETL RUN SUMMARY
+2026-04-16 10:17:35,501 | INFO | ========================================
+2026-04-16 10:17:35,501 | INFO | Run ID: 51ac739a-80aa-415d-9e6e-bfc964c9ac08
+2026-04-16 10:17:35,502 | INFO | Source rows: 145500
+2026-04-16 10:17:35,502 | INFO | Rejected rows (athlete_id rules): 0
+2026-04-16 10:17:35,502 | INFO | Source dupes removed (hash): 411
+2026-04-16 10:17:35,502 | INFO | Target before: 0
+2026-04-16 10:17:35,503 | INFO | Inserted rows: 145054
+2026-04-16 10:17:35,503 | INFO | Target after: 145054
+2026-04-16 10:17:35,503 | INFO | Source vs Inserted diff: 446
+2026-04-16 10:17:35,503 | INFO | Duration: 10.81 sec
+2026-04-16 10:17:35,504 | INFO | Status: SUCCESS
+2026-04-16 10:17:35,504 | INFO | 
+ ETL STEP TIMING SUMMARY
+2026-04-16 10:17:35,504 | INFO | ========================================
+2026-04-16 10:17:35,505 | INFO | Extract CSV: 0.34 sec
+2026-04-16 10:17:35,505 | INFO | Clean data: 0.54 sec
+2026-04-16 10:17:35,505 | INFO | String checks: 0.24 sec
+2026-04-16 10:17:35,506 | INFO | Numeric checks: 0.04 sec
+2026-04-16 10:17:35,506 | INFO | Date checks: 0.10 sec
+2026-04-16 10:17:35,506 | INFO | Dedupe: 3.11 sec
+2026-04-16 10:17:35,507 | INFO | Load: 6.15 sec
+2026-04-16 10:17:35,507 | INFO | Total: 10.81 sec

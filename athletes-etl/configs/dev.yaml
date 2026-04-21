@@ -1,0 +1,67 @@
+# -------------------------
+# Pipeline identity
+# -------------------------
+pipeline:
+  name: "CSV_to_SQLServer_Athletes"
+  source_name: "bios.csv"
+
+# -------------------------
+# Extract
+# -------------------------
+extract:
+  csv_path: "Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
+
+# -------------------------
+# Target (SQL Server)
+# IMPORTANT: password should NOT be in YAML.
+# Keep password in an environment variable.
+# -------------------------
+sqlserver:
+  dsn: "SqlServer ODBC"
+  database: "AdventureWorksDW2014"
+  username: "etl_user"
+  password_env: "SQLSERVER_PASSWORD"   # env var name on your PC
+  target_table: "dbo.Athletes"
+  audit_table: "dbo.ETL_Audit_Run"
+  reject_table: "dbo.Athletes_Rejects"
+
+# -------------------------
+# Load behavior
+# -------------------------
+load:
+  is_chunked_inserts: false
+  chunk_size: 5000
+
+# -------------------------
+# Reject rules
+# -------------------------
+reject_rules:
+  string_limits:
+    name: 200
+    born_city: 100
+    born_region: 100
+    born_country: 5
+    NOC: 50
+
+  numeric_ranges:
+    height_cm:
+      min: 90
+      max: 250
+      allow_zero: true
+    weight_kg:
+      min: 20
+      max: 300
+      allow_zero: true
+
+  date_sanity:
+    min_born_date: "1800-01-01"
+    default_date: "1901-01-01"
+    reject_born_after_today: true
+    reject_died_before_born: true
+
+# -------------------------
+# Hash dedupe (within source batch)
+# -------------------------
+dedupe:
+  enabled: true
+  hash_cols: ["name", "born_date", "born_city", "born_country"]

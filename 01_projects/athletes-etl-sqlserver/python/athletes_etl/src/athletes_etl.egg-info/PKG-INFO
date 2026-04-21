@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: athletes-etl
+Version: 0.1.0
+Summary: Olympic athletes ETL (CSV -> SQL Server) with audit + rejects
+Requires-Python: >=3.9
+Requires-Dist: pandas
+Requires-Dist: sqlalchemy
+Requires-Dist: pyodbc
+Requires-Dist: pyyaml

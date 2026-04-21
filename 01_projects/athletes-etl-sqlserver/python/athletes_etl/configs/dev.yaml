@@ -1,0 +1,136 @@
+# ============================================================
+# CONFIG FILE (dev.yaml)
+# ============================================================
+# PURPOSE:
+# This file contains all environment-specific configuration
+# for the ETL pipeline (DEV environment).
+#
+# It allows the pipeline to be flexible, reusable, and easy to
+# switch between environments (dev, test, prod) without changing code.
+#
+# WHAT THIS FILE CONTROLS:
+# - Pipeline identity (name, source)
+# - Extract settings (CSV file path)
+# - SQL Server connection details (except password)
+# - Load behavior (chunked inserts, batch size)
+# - Data validation and reject rules
+# - Deduplication logic
+#
+# IMPORTANT RULES:
+# - ❌ DO NOT store passwords or secrets in this file
+# - ✅ Use environment variables for sensitive data (e.g., SQLSERVER_PASSWORD)
+# - ✅ Keep values environment-specific (dev vs prod may differ)
+#
+# HOW IT IS USED:
+# - Loaded by config.py using load_config("dev")
+# - Returned as a dictionary (cfg)
+# - Accessed like:
+#     cfg["extract"]["csv_path"]
+#     cfg["sqlserver"]["target_table"]
+#
+# PATH NOTE (VERY IMPORTANT):
+# - csv_path can be:
+#     ✔ Relative path (e.g., "data/bios.csv") → depends on working directory
+#     ✔ Absolute path (e.g., "C:/.../bios.csv") → always works
+# - For portability, prefer storing data inside the project (e.g., data/)
+#
+# DESIGN PRINCIPLE:
+# 👉 "All configuration lives here, NOT in the code"
+#
+# This keeps the pipeline:
+# - Easy to maintain
+# - Easy to deploy
+# - Easy to debug
+#
+# ============================================================
+
+
+# -------------------------
+# Pipeline identity
+# -------------------------
+pipeline:
+  name: "CSV_to_SQLServer_Athletes"
+  source_name: "bios.csv"
+
+# -------------------------
+# Extract
+# -------------------------
+extract:
+  # csv_path: "Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
+
+  csv_path: "C:/Python313/Scripts/Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
+
+# Best immediate approach
+
+# Use the absolute path in YAML now since you already know the real file location.
+
+# Better long-term approach
+
+# For a cleaner portfolio project, move bios.csv into your repo, for example:
+
+# C:\projects\data-engineering-portfolio\01_projects\athletes-etl-sqlserver\data\bios.csv
+
+# and then use:
+
+# extract:
+#  csv_path: "data/bios.csv"
+
+# That makes the project portable and easier to share.
+
+
+
+
+# -------------------------
+# Target (SQL Server)
+# IMPORTANT: password should NOT be in YAML.
+# Keep password in an environment variable.
+# -------------------------
+sqlserver:
+  dsn: "SqlServer ODBC"
+  database: "AdventureWorksDW2014"
+  username: "etl_user"
+  password_env: "SQLSERVER_PASSWORD"   # env var name on your PC
+  target_table: "dbo.Athletes"
+  audit_table: "dbo.ETL_Audit_Run"
+  reject_table: "dbo.Athletes_Rejects"
+
+# -------------------------
+# Load behavior
+# -------------------------
+load:
+  is_chunked_inserts: false
+  chunk_size: 5000
+
+# -------------------------
+# Reject rules
+# -------------------------
+reject_rules:
+  string_limits:
+    name: 200
+    born_city: 100
+    born_region: 100
+    born_country: 5
+    NOC: 50
+
+  numeric_ranges:
+    height_cm:
+      min: 90
+      max: 250
+      allow_zero: true
+    weight_kg:
+      min: 20
+      max: 300
+      allow_zero: true
+
+  date_sanity:
+    min_born_date: "1800-01-01"
+    default_date: "1901-01-01"
+    reject_born_after_today: true
+    reject_died_before_born: true
+
+# -------------------------
+# Hash dedupe (within source batch)
+# -------------------------
+dedupe:
+  enabled: true
+  hash_cols: ["name", "born_date", "born_city", "born_country"]
