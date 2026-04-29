@@ -58,7 +58,11 @@ pipeline:
 extract:
   # csv_path: "Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
 
-  csv_path: "C:/Python313/Scripts/Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
+  # Removed since we're using DOCKER but is the correct PATH if not using DOCKER
+  # csv_path: "C:/Python313/Scripts/Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
+
+  # Needed for DOCKER
+  csv_path: /app/data/bios.csv
 
 # Best immediate approach
 
