@@ -169,15 +169,25 @@ DEDUPE_ENABLED = bool(cfg["dedupe"]["enabled"])
 hash_cols = cfg["dedupe"]["hash_cols"]
 
 
+# This section is used when not using DOCKER
 
+#dsn = cfg["sqlserver"]["dsn"]
+#db = cfg["sqlserver"]["database"]
+#user = cfg["sqlserver"]["username"]
+#password = get_sql_password(cfg)
+#engine = build_engine(dsn, db, user, password)
+#########################################################
 
-dsn = cfg["sqlserver"]["dsn"]
+# Used since we're using DOCKER
+
+server = cfg["sqlserver"]["server"]
 db = cfg["sqlserver"]["database"]
 user = cfg["sqlserver"]["username"]
+driver = cfg["sqlserver"]["driver"]
 
 password = get_sql_password(cfg)
 
-engine = build_engine(dsn, db, user, password)
+engine = build_engine(server, db, user, password, driver)
 
 # ------------------------------------------------------------
 # ✅ TEST DATABASE CONNECTION (debug / validation step)

@@ -64,6 +64,7 @@ extract:
   # Needed for DOCKER
   csv_path: /app/data/bios.csv
 
+
 # Best immediate approach
 
 # Use the absolute path in YAML now since you already know the real file location.
@@ -89,14 +90,30 @@ extract:
 # IMPORTANT: password should NOT be in YAML.
 # Keep password in an environment variable.
 # -------------------------
+
+# This config exist when we're not using DOCKER
+#sqlserver:
+#  dsn: "SqlServer ODBC"
+#  database: "AdventureWorksDW2014"
+#  username: "etl_user"
+#  password_env: "SQLSERVER_PASSWORD"   # env var name on your PC
+#  target_table: "dbo.Athletes"
+#  audit_table: "dbo.ETL_Audit_Run"
+#  reject_table: "dbo.Athletes_Rejects"
+
+# this config is for DOCKER
 sqlserver:
-  dsn: "SqlServer ODBC"
-  database: "AdventureWorksDW2014"
-  username: "etl_user"
-  password_env: "SQLSERVER_PASSWORD"   # env var name on your PC
-  target_table: "dbo.Athletes"
-  audit_table: "dbo.ETL_Audit_Run"
-  reject_table: "dbo.Athletes_Rejects"
+  server: host.docker.internal
+  port: 1433
+  database: AdventureWorksDW2014
+  username: etl_user
+  password_env: SQLSERVER_PASSWORD
+  driver: ODBC Driver 18 for SQL Server
+
+
+  target_table: dbo.Athletes
+  audit_table: dbo.ETL_Audit_Run
+  reject_table: dbo.Athletes_Rejects
 
 # -------------------------
 # Load behavior

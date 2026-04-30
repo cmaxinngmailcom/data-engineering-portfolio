@@ -73,23 +73,46 @@ import pandas as pd
 import json
 
 
-def build_engine(dsn: str, db: str, user: str, password: str):
+
+#def build_engine(dsn: str, db: str, user: str, password: str):
+#    """
+#    Build and return a SQLAlchemy engine for SQL Server.
+#    """
+#    connection_url = URL.create(
+#        "mssql+pyodbc",
+#        username=user,
+#        password=password,
+#        host=None,  # DSN handles server name
+#        database=db,
+#        query={
+#            "dsn": dsn,
+#            "TrustServerCertificate": "yes"
+#        }
+#    )
+
+#    return create_engine(connection_url)
+
+############
+def build_engine(server: str, database: str, username: str, password: str, driver: str):
     """
-    Build and return a SQLAlchemy engine for SQL Server.
+    Build SQLAlchemy engine for SQL Server using server/driver connection.
+    Docker-friendly version.
     """
+
     connection_url = URL.create(
         "mssql+pyodbc",
-        username=user,
+        username=username,
         password=password,
-        host=None,  # DSN handles server name
-        database=db,
+        host=server,
+        database=database,
         query={
-            "dsn": dsn,
-            "TrustServerCertificate": "yes"
-        }
+            "driver": driver,
+            "TrustServerCertificate": "yes",
+        },
     )
 
-    return create_engine(connection_url)
+    return create_engine(connection_url, fast_executemany=True)
+############
 
 def test_connection(engine) -> str:
     """
