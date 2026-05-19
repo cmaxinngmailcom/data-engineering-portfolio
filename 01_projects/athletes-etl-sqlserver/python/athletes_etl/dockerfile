@@ -1,8 +1,9 @@
-FROM python:3.13-slim
+# Use official Airflow image (Airflow already installed)
+FROM apache/airflow:2.9.3-python3.11
 
-WORKDIR /app
+USER root
 
-# System packages needed for pyodbc
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
@@ -12,22 +13,17 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Microsoft ODBC Driver 18 for SQL Server
+# Install Microsoft ODBC driver
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-prod.gpg \
     && curl https://packages.microsoft.com/config/debian/12/prod.list > /etc/apt/sources.list.d/mssql-release.list \
     && apt-get update \
     && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+USER airflow
 
-# Copy project
-COPY . .
+COPY requirements.txt /requirements.txt
 
-# Make src importable
-ENV PYTHONPATH=/app/src
+RUN pip install --no-cache-dir -r /requirements.txt
 
-CMD ["python", "-m", "athletes_etl.main"]
-
+ENV PYTHONPATH=/opt/airflow/src
