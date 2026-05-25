@@ -62,7 +62,8 @@ extract:
   # csv_path: "C:/Python313/Scripts/Pandas/Complete_Python_Pandas_Data_Science_Tutorial/bios.csv"
 
   # Needed for DOCKER
-  csv_path: /app/data/bios.csv
+  # csv_path: /app/data/bios.csv
+  csv_path: data/bios.csv
 
 
 # Best immediate approach
