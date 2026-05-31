@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="AGgs1BFKvzOYP4Mo6hjc">
+    <mxGraphModel dx="2554" dy="1109" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gejExenJG1DYZWaPcwUS-10" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="1050" width="270" x="-230" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-8" parent="gejExenJG1DYZWaPcwUS-10" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=0;arcSize=10;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;DATA SOURCES&lt;/font&gt;" vertex="1">
+          <mxGeometry height="53.389830508474574" width="270" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-9" parent="gejExenJG1DYZWaPcwUS-10" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;CRM(SalesForce)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="996.6101694915254" width="270" y="53.389830508474574" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-11" parent="gejExenJG1DYZWaPcwUS-10" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/applications/mobile_app.svg;" value="Mobile App" vertex="1">
+          <mxGeometry height="53.389830508474574" width="53.389830508474574" x="38.57142857142858" y="88.98305084745762" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-13" parent="gejExenJG1DYZWaPcwUS-10" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.website_generic;pointerEvents=1;" value="website" vertex="1">
+          <mxGeometry height="37.81779661016949" width="64.28571428571429" x="51.42857142857143" y="186.864406779661" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-14" parent="gejExenJG1DYZWaPcwUS-10" style="fillColor=#ffffff;strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" value="Payment" vertex="1">
+          <mxGeometry height="75.63559322033898" width="90" x="25.714285714285715" y="249.15254237288136" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-15" parent="gejExenJG1DYZWaPcwUS-14" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#757575;strokeColor=none;shape=mxgraph.gcp2.payment;part=1;" value="" vertex="1">
+          <mxGeometry height="40" relative="1" width="50" x="0.5" as="geometry">
+            <mxPoint x="-25" y="15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-18" parent="gejExenJG1DYZWaPcwUS-10" style="verticalLabelPosition=bottom;aspect=fixed;html=1;shape=mxgraph.salesforce.marketing;fillColor=none;strokeColor=none;" value="&#xa;Marketing Platform&#xa;&#xa;" vertex="1">
+          <mxGeometry height="53.389830508474574" width="53.389830508474574" x="38.567142857142855" y="355.9322033898305" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-19" parent="gejExenJG1DYZWaPcwUS-10" style="aspect=fixed;sketch=0;html=1;dashed=0;whitespace=wrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;prIcon=api" value="&#xa;Smartwatch API&#xa;&#xa;" vertex="1">
+          <mxGeometry height="42.71186440677966" width="44.49152542372881" x="20.2" y="530.3389830508474" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-20" parent="gejExenJG1DYZWaPcwUS-10" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.ccs_customer_service_02;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;Customer Support System" vertex="1">
+          <mxGeometry height="49.11864406779661" width="46.44915254237288" x="51.43" y="694.0677966101695" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-22" parent="gejExenJG1DYZWaPcwUS-10" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Dompicon_Glyph_Fitness___Diet-2338/exercise-dumbbells-gym-fitness-diet-865.svg" value="&#xa;Third-party Fitness API&#xa;&#xa;" vertex="1">
+          <mxGeometry height="66.73728813559322" width="66.73728813559322" x="40.71" y="783.0508474576271" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-23" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="1050" width="270" x="100" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-24" parent="gejExenJG1DYZWaPcwUS-23" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=0;arcSize=10;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;INGESTION LAYER&lt;/font&gt;" vertex="1">
+          <mxGeometry height="53.389830508474574" width="270" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-25" parent="gejExenJG1DYZWaPcwUS-23" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="996.6101694915254" width="270" y="53.389830508474574" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-34" parent="gejExenJG1DYZWaPcwUS-23" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.apigateway;" value="&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;API Gateway&lt;/div&gt;" vertex="1">
+          <mxGeometry height="41.699999999999996" width="43.199999999999996" x="59.8" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-35" parent="gejExenJG1DYZWaPcwUS-23" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.kafka;" value="&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Kafka (real-time events)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="42" width="56.699999999999996" x="46.3" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-36" parent="gejExenJG1DYZWaPcwUS-23" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&#xa;Fivetran&#xa;&#xa;" vertex="1">
+          <mxGeometry height="30" width="60" x="20" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-37" parent="gejExenJG1DYZWaPcwUS-23" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;br&gt;&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Airflow (batch ingestion)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="30" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-38" parent="gejExenJG1DYZWaPcwUS-23" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.bucket;fillColor=#E05243;gradientColor=none;" value="&#xa;File Upload Bucket&#xa;&#xa;" vertex="1">
+          <mxGeometry height="61.5" width="60" x="46" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-39" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="1050" width="360" x="440" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-40" parent="gejExenJG1DYZWaPcwUS-39" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=0;arcSize=10;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;DATA STORAGE LAYER&lt;/font&gt;" vertex="1">
+          <mxGeometry height="53.389830508474574" width="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-41" parent="gejExenJG1DYZWaPcwUS-39" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="996.6101694915254" width="360" y="53.389830508474574" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-46" parent="gejExenJG1DYZWaPcwUS-39" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.bucket;fillColor=#E05243;gradientColor=none;" value="&#xa;File Upload Bucket&#xa;&#xa;" vertex="1">
+          <mxGeometry height="61.5" width="80" x="61.333333333333336" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="gejExenJG1DYZWaPcwUS-48" parent="gejExenJG1DYZWaPcwUS-39" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.data_lake_resource_icon;" value="Data Lake (Raw Zone)(S3/GCS)" vertex="1">
+          <mxGeometry height="78" width="78" x="49.333333333333336" y="77" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
