@@ -1,0 +1,1 @@
+# EcoCart Data Platform Architecture 
