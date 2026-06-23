@@ -91,6 +91,9 @@ from athletes_etl.transform import (
 
 from athletes_etl.logging_utils import setup_logger # for logging_utils.py
 
+from athletes_etl.db import get_existing_athlete_ids
+
+
 logger = setup_logger()
 
 # -------------------------
@@ -487,7 +490,7 @@ target_before = get_table_count(engine, TARGET_TABLE)
 # -------------------------
 
 # ---------------------------------
-# PROFILLING 9: IMPROVE LOAD TIMING
+# PROFILING 9: IMPROVE LOAD TIMING
 # ---------------------------------
 
 load_start = time.perf_counter()
@@ -496,30 +499,79 @@ status = "SUCCESS"
 message = "ETL completed"
 
 try:
-    # ✅ Build kwargs so we only pass chunksize when enabled
+    # Build kwargs so we only pass chunksize when enabled
     to_sql_kwargs = {}
+
     if IS_CHUNKED_INSERTS:
         to_sql_kwargs["chunksize"] = CHUNK_SIZE
 
-    athletes.to_sql(
-        name=TARGET_TABLE.split(".")[-1],  # "Athletes"
-        con=engine,
-        schema=TARGET_TABLE.split(".")[0],  # "dbo"
-        if_exists="append",
-        index=False,
-        **to_sql_kwargs  # ********************  ** unpacks the dictionary => chunksize=5000 (when enabled)
-        # **to_sql_kwargs means: “Take all the key=value pairs inside this dictionary
-        # and pass them as named arguments to the function.”
+    # ----------------------------------------
+    # Prevent duplicate inserts into target
+    # ----------------------------------------
+
+    existing_ids_df = get_existing_athlete_ids(engine)
+
+    existing_ids = set(
+        existing_ids_df["athlete_id"].astype(int)
     )
 
+    before_dedupe_count = len(athletes)
+
+    athletes = athletes[
+        ~athletes["athlete_id"].isin(existing_ids)
+    ].copy()
+
+    skipped_existing_rows = (
+        before_dedupe_count - len(athletes)
+    )
+
+    logger.info(
+        f"Skipped existing athlete rows: {skipped_existing_rows}"
+    )
+
+    # ----------------------------------------
+    # Insert only if rows remain
+    # ----------------------------------------
+
+    if len(athletes) > 0:
+
+        athletes.to_sql(
+            name=TARGET_TABLE.split(".")[-1],      # Athletes
+            con=engine,
+            schema=TARGET_TABLE.split(".")[0],     # dbo
+            if_exists="append",
+            index=False,
+            **to_sql_kwargs
+        )
+
+        logger.info(
+            f"Inserted {len(athletes)} new athlete rows"
+        )
+
+    else:
+
+        logger.info(
+            "No new athlete rows to insert."
+        )
+
 except Exception as e:
+
     status = "FAILED"
     message = str(e)
-    logger.error(f"ETL failed: {message}")
+
+    logger.error(
+        f"ETL failed: {message}"
+    )
+
     raise
+
 finally:
+
     load_elapsed = time.perf_counter() - load_start
-    logger.info(f"Load to SQL Server took {load_elapsed:.2f} sec")
+
+    logger.info(
+        f"Load to SQL Server took {load_elapsed:.2f} sec"
+    )
 
 # -------------------------
 # AFTER COUNT + METRICS

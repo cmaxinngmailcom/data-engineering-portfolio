@@ -223,6 +223,24 @@ def write_rejects(engine, run_id, rejects_df: pd.DataFrame, reason) -> int:
     )
     return len(out)
 
+
+# -------------------------
+# RETURNS ID's from Alhletes table => USEFUL to prevent DUPLICATION 
+# -------------------------
+
+
+def get_existing_athlete_ids(engine):
+    """
+    Get athlete_id values already loaded in dbo.Athletes.
+    Used to prevent duplicate inserts when rerunning the ETL.
+    """
+    query = """
+        SELECT athlete_id
+        FROM dbo.Athletes
+    """
+
+    return pd.read_sql(query, engine)
+
 # ============================================================
 # 🧠 INTERVIEW QUESTION & ANSWER
 # ============================================================

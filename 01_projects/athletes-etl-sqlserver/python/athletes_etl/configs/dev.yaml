@@ -104,7 +104,8 @@ extract:
 
 # this config is for DOCKER
 sqlserver:
-  server: host.docker.internal
+  #server: host.docker.internal
+  server: localhost
   port: 1433
   database: AdventureWorksDW2014
   username: etl_user
