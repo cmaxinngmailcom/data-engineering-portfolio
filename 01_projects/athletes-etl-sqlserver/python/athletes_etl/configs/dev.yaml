@@ -104,13 +104,14 @@ extract:
 
 # this config is for DOCKER
 sqlserver:
-  #server: host.docker.internal
-  server: localhost
+  #server: localhost
+  server: host.docker.internal
   port: 1433
   database: AdventureWorksDW2014
   username: etl_user
   password_env: SQLSERVER_PASSWORD
   driver: ODBC Driver 18 for SQL Server
+
 
 
   target_table: dbo.Athletes

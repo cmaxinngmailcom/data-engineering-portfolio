@@ -1,43 +1,145 @@
-version: "3.8"
+# ============================================================
+# DOCKER COMPOSE
+# ============================================================
+#
+# PURPOSE
+# -------
+# Start Apache Airflow and PostgreSQL using Docker.
+#
+# COMPONENTS
+# ----------
+# airflow-db
+#     PostgreSQL database used internally by Airflow.
+#
+# airflow
+#     Airflow Webserver + Scheduler.
+#
+# AIRFLOW UI
+# ----------
+# http://localhost:8080
+#
+# LOGIN
+# -----
+# Username: admin
+# Password: admin
+#
+# STARTUP COMMANDS
+# ----------------
+# docker compose down --volumes --remove-orphans
+# docker compose build --no-cache
+# docker compose up
+#
+# ============================================================
 
 services:
+
+  # ----------------------------------------------------------
+  # PostgreSQL database used by Airflow
+  # Stores:
+  # - DAG history
+  # - Task history
+  # - Logs metadata
+  # - Airflow configuration
+  # ----------------------------------------------------------
   airflow-db:
+
     image: postgres:13
+
     container_name: airflow-db
+
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+
     volumes:
       - airflow-db-data:/var/lib/postgresql/data
 
+  # ----------------------------------------------------------
+  # Airflow Webserver + Scheduler
+  # ----------------------------------------------------------
   airflow:
+
+    # Build image from local Dockerfile
     build: .
+
     container_name: airflow
+
     depends_on:
       - airflow-db
+
     environment:
+
+      # Airflow executor
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
+
+      # Don't install Airflow sample DAGs
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+
+      # PostgreSQL connection used by Airflow
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+
+      # Password used by ETL when connecting to SQL Server
+      SQLSERVER_PASSWORD: max007ime
+
+      # Allows imports such as:
+      # from athletes_etl.main import ...
+      PYTHONPATH: /opt/airflow/src
+
     volumes:
+
+      # Airflow DAG files
       - ./dags:/opt/airflow/dags
+
+      # Python ETL source code
       - ./src:/opt/airflow/src
+
+      # YAML configuration files
       - ./configs:/opt/airflow/configs
+
+      # CSV files
+      - ./data:/opt/airflow/data
+
     ports:
+
+      # Airflow Web UI
       - "8080:8080"
+
+    # --------------------------------------------------
+    # Container startup sequence
+    #
+    # 1. Wait for PostgreSQL to fully start
+    # 2. Create/upgrade Airflow metadata tables
+    # 3. Create Airflow admin user
+    # 4. Start Airflow Webserver
+    # 5. Start Airflow Scheduler
+    #
+    # NOTE:
+    # Webserver runs in background (&)
+    # Scheduler runs in foreground
+    # --------------------------------------------------
     command: >
       bash -c "
+      echo 'Waiting for Postgres...' &&
+      sleep 20 &&
+      echo 'Migrating Airflow database...' &&
       airflow db migrate &&
+      echo 'Creating Airflow admin user...' &&
       airflow users create
       --username admin
       --password admin
       --firstname Claude
       --lastname User
       --role Admin
-      --email admin@example.com || true &&
-      airflow webserver & airflow scheduler
+      --email admin@example.com || true;
+      echo 'Starting Airflow webserver...' &&
+      airflow webserver --port 8080 &
+      echo 'Starting Airflow scheduler...' &&
+      airflow scheduler
       "
 
+# ----------------------------------------------------------
+# Persistent PostgreSQL storage
+# ----------------------------------------------------------
 volumes:
   airflow-db-data:
