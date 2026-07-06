@@ -1,0 +1,103 @@
+# ==========================================================
+# dev.yaml
+#
+# Development configuration for the SQL Server to Amazon S3
+# PySpark ETL pipeline.
+#
+# This file contains all environment-specific settings.
+# No application code should contain hard-coded values.
+# ==========================================================
+
+# ----------------------------------------------------------
+# Project Information
+# ----------------------------------------------------------
+project:
+
+  # Project name displayed in logs and documentation.
+  name: "SQLServer_to_S3_PySpark"
+
+  # Current execution environment.
+  # Future values:
+  #   dev
+  #   test
+  #   qa
+  #   prod
+  environment: "dev"
+
+
+# ----------------------------------------------------------
+# Apache Spark Configuration
+# ----------------------------------------------------------
+spark:
+
+  # Name displayed in the Spark UI.
+  app_name: "SQLServer to S3 PySpark Pipeline"
+
+  # Run Spark locally using all available CPU cores.
+  master: "local[*]"
+
+  jdbc_driver: "jars/mssql-jdbc-13.4.0.jre11.jar"
+
+
+# ----------------------------------------------------------
+# Microsoft SQL Server Configuration
+# ----------------------------------------------------------
+sqlserver:
+
+  # SQL Server instance name or hostname.
+  server: "localhost"
+
+  # SQL Server port.
+  port: 1433
+
+  # Source database.
+  database: "AdventureWorksDW2014"
+
+  # Source table.
+  table: "dbo.Athletes_Big"
+
+  # SQL Server login.
+  user: "sa"
+
+  # Environment variable containing the SQL Server password.
+  #
+  # Example (PowerShell):
+  #
+  # $env:SQLSERVER_PASSWORD = "YourPassword"
+  #
+  password_env_var: "SQLSERVER_PASSWORD"
+
+  # Microsoft JDBC Driver class.
+  driver: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+
+  # --------------------------------------------------------
+  # Spark JDBC Parallel Read Configuration
+  # --------------------------------------------------------
+
+  # Numeric column used for parallel extraction.
+  partition_column: "athlete_sk"
+
+  # Lowest partition value.
+  lower_bound: 1
+
+  # Highest partition value.
+  #
+  # Update this value if additional rows are added.
+  upper_bound: 10153780
+
+  # Number of Spark partitions.
+  #
+  # Increase or decrease depending on CPU cores.
+  num_partitions: 8
+
+  # Number of rows fetched from SQL Server per round trip.
+  fetch_size: 10000
+
+
+# ----------------------------------------------------------
+# Output Configuration
+# ----------------------------------------------------------
+output:
+
+  # Local directory used during development.
+  local_parquet_path: "output/parquet/athletes_big"
