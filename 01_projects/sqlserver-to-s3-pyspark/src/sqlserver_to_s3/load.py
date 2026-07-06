@@ -68,6 +68,9 @@ def load_data(
     # Snappy
     #     Default Parquet compression.
     # ---------------------------------------------------------
+
+    dataframe = dataframe.coalesce(4)
+
     (
         dataframe.write
         .mode("overwrite")

@@ -73,15 +73,15 @@ def create_spark_session(
         .master(master)
         .appName(app_name)
 
-        # SQL Server JDBC Driver
-        .config(
-            "spark.jars",
-            jdbc_driver
-        )
+        .config("spark.driver.memory", "8g")
+        .config("spark.executor.memory", "8g")
+
+        .config("spark.sql.shuffle.partitions", "8")
+
+        .config("spark.jars", jdbc_driver)
+
         .getOrCreate()
     )
-
-
 
     # ---------------------------------------------------------
     # Reduce Spark logging.

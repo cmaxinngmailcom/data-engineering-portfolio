@@ -12,7 +12,7 @@ This module is responsible for:
 No transformations are performed here.
 This module is responsible only for data extraction.
 """
-
+import os
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
 
@@ -48,7 +48,10 @@ def read_sqlserver_table(
     database = sql_config["database"]
     table = sql_config["table"]
     user = sql_config["user"]
-    password = sql_config["password"]
+    password_env_var = sql_config["password_env_var"]
+    password = os.getenv(password_env_var)
+    if not password:
+        raise RuntimeError(f"Missing environment variable: {password_env_var}")
     driver = sql_config["driver"]
 
     partition_column = sql_config["partition_column"]
